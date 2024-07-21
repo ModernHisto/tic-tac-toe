@@ -1,5 +1,7 @@
 "use strict";
+console.time()
 let fields = document.querySelector("#playing_field tbody");
+let table = document.querySelector("table");
 let Winning_data = [
   [fields.childNodes[0].childNodes[1], fields.childNodes[0].childNodes[3], fields.childNodes[0].childNodes[5]],
   [fields.childNodes[2].childNodes[1], fields.childNodes[2].childNodes[3], fields.childNodes[2].childNodes[5]],
@@ -10,11 +12,11 @@ let Winning_data = [
   [fields.childNodes[0].childNodes[1], fields.childNodes[2].childNodes[3], fields.childNodes[4].childNodes[5]],
   [fields.childNodes[0].childNodes[5], fields.childNodes[2].childNodes[3], fields.childNodes[4].childNodes[1]],
 ];
-console.log(Winning_data[0]);
+
 +function click_binding() {                                                 //Привязка прослушивателя событий и стилизация Х и O
   let previous_move = true;
   Winning_data.forEach(element => {
-    Array.from(element.children).forEach((element2) => {
+    element.forEach(element2 => {
       element2.addEventListener("click", () => {
         if (element2.textContent == "X" || element2.textContent == "O") {}
         else if (previous_move == true) {
@@ -27,27 +29,38 @@ console.log(Winning_data[0]);
           previous_move = !previous_move
           element2.style.color = "rgb(235,186,69)";
         }
+
+        if (element.every(check_for_victory_O)) {                            //Логика победы\поражения
+          document.querySelector(".o_win").style.opacity = 1;
+          table.style = "pointer-events: none;"
+        }
+        else if (element.every(check_for_victory_X)) {
+          document.querySelector(".x_win").style.opacity = 1;
+          table.style = "pointer-events: none;"
+        }
       })
     })
   });
 }();
-
-
-function logics () {
-  console.log("!!!!");
+document.querySelector("#reset").addEventListener("click", function() {
+  document.querySelector(".x_win").style.opacity = 0;
+  document.querySelector(".o_win").style.opacity = 0;
+  table.style = "pointer-events: auto";
   Winning_data.forEach(element => {
-    let temporary_array = [];
     element.forEach(element2 => {
-      if (element2.textContent == "X") {
-        temporary_array.push()
-      }
-      else if (element2.textContent == "O") {
-        alert("O - победили!")
-      }
-    });
+      element2.textContent = "";
+      })
+    })
   });
-};
 
 
+function check_for_victory_X(elem) {
+  return elem.textContent == "X"
+}
+function check_for_victory_O(elem) {
+  return elem.textContent == "O"
+}
+console.timeEnd()
 
+//P.S. - Знаю что некоторые решения не оптимальны с точки зрени производительности, но в угоду оригинальности оставляю как есть...
 
